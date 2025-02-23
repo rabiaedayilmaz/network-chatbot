@@ -17,6 +17,7 @@ source .venv/bin/activate
 ```
 
 ```bash
+export PYTHONPATH=.
 pip install -r requirements.txt
 ```
 

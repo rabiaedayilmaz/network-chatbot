@@ -2,21 +2,23 @@ import pytest
 from unittest import IsolatedAsyncioTestCase
 from llm.agents.chat_agent import AIChatAgent
 
-class TestGPT(IsolatedAsyncioTestCase):
+class TestAIModel(IsolatedAsyncioTestCase):
 
     def __init__(self, *args, **kwargs):
-        super(TestGPT, self).__init__(*args, **kwargs)
+        super(TestAIModel, self).__init__(*args, **kwargs)
 
         self.language = "tr"
-        self.agent = AIChatAgent(session_id="test_session_id",
-                            available_languages=["tr"],
-                            language_code=self.language,
+        self.agent = AIChatAgent(
+                            session_id="test_session_id",
+                            language_mode=self.language,
                             )
         
-    async def test_01_gpt_connection_unit(self):
+    async def test_01_if_alive(self):
         """
         Test if alive agent
         """
-        transcript = "Merhaba"
-        result = await self.agent.ask_agent(transcript, user_old_messages=[])
-        self.assertIsNotNone(result.get("ai_response"))
+        transcript = "selam"
+        result = await self.agent.ask_agent(transcript, chat_history=[])
+        results = [item async for item in result]
+
+        self.assertIsNotNone(results)
