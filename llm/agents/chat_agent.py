@@ -34,7 +34,7 @@ class AIChatAgent(BaseChatAgent):
         persona_prompt = PERSONA_MAPPING[persona]
         agent_tools = AGENT_TOOLS.get(persona, [])
 
-        logger.info(f"Selected Agent: {persona}")
+        logger.info(f"Selected Agent: {persona.upper()}")
         logger.info(f"Assigned Tools: {agent_tools}")
 
         return persona, persona, persona_prompt, agent_tools
@@ -45,10 +45,16 @@ class AIChatAgent(BaseChatAgent):
         Return: generator AI response
         """
         persona, persona, persona_prompt, agent_tools = await self.set_agent_tools(user_query=user_query)
+
+        if persona:
+            logger.info(f"Selected Agent: {persona.upper()}")
+        else:
+            logger.info(f"No agent selected.")
+
         model = AIModel(**self.model_params)
         ai_response = await model.ask_to_model(user_query=user_query, chat_history=chat_history, persona=persona,
                                                persona_prompt=persona_prompt, agent_tools=agent_tools)
-        return ai_response
+        return ai_response, persona
 
 
 async def main():

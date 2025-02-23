@@ -27,7 +27,7 @@ class AIModel:
                            persona: str = "fixie", persona_prompt: str = "", agent_tools: list = None):
         try:
             client = AsyncClient()
-            logger.info(f"Selected Agent: {persona.upper()}")
+            logger.info(f"{persona.upper()} preparing response...")
             persona_prompt = PERSONA_MAPPING[persona]
 
             current_query = {"role": "user", "content": user_query}
@@ -50,6 +50,7 @@ class AIModel:
 
             # mostly for testing
             if stream_to_terminal:
+                print(f"{persona.upper()}:\n")
                 async for part in ai_response:
                     print(part['message']['content'], end='', flush=True)
                 print("\n")

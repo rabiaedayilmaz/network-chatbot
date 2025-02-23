@@ -17,7 +17,7 @@ async def main():
                 print("Goodbye!")
                 break
 
-            logger.info("\nThinking...")
+            logger.info("\Starting...")
             await handle_user_query(session_id=session_id, user_query=user_query, chat_history=chat_history, stream_to_terminal=True)
 
     except KeyboardInterrupt:
