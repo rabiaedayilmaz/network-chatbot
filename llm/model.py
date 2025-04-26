@@ -12,7 +12,7 @@ from llm.utils.prompts import get_system_prompt
 @dataclass
 class AIModel:
     system_prompt: str = field(default="")
-    model: str = field(default="phi4")
+    model: str = field(default="qwen2.5:14b")
     language_mode: str = field(default="tr")
     temperature: float = field(default=0.1)
     max_tokens: int = field(default=256)
@@ -32,13 +32,13 @@ class AIModel:
 
             current_query = {"role": "user", "content": user_query}
 
+            chat_history += [{"role": "system", "content": self.system_prompt}, current_query]
+
             if chat_history:
                 current_query = [{"role": "system", "content": persona_prompt}]
                 history_prompt = [{"role": "system", "content": "Previous messages provided as only context for chat history."}]
                 chat_history = chat_history + history_prompt + current_query
-            else:
-                chat_history += [{"role": "system", "content": self.system_prompt}, current_query]
-
+                
             # returns async generator 
             ai_response = await client.chat(
                                             self.model, 
@@ -46,7 +46,7 @@ class AIModel:
                                             stream=True,
                                             )
             
-            logger.info("AI response generator is creater.")
+            logger.info("AI response generator is created.")
 
             # mostly for testing
             if stream_to_terminal:

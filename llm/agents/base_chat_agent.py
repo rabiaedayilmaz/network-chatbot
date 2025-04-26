@@ -5,7 +5,7 @@ from llm.utils.prompts import get_system_prompt
 
 
 class BaseChatAgent:
-    def __init__(self, session_id: str, language_mode: str, model: str = "phi4", temperature: float = 0.1,
+    def __init__(self, session_id: str, language_mode: str, model: str = "qwen2.5:14b", temperature: float = 0.1,
                  max_tokens: int = 256, top_p: float = 0.1, frequency_penalty: float = 0.2,
                  presence_penalty: float = 0.7, enabled_chat_history: bool = True, persona: str = None) -> None:
         self.session_id = session_id
