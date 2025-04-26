@@ -21,6 +21,11 @@ export PYTHONPATH=.
 pip install -r requirements.txt
 ```
 
+Install ollama from official website, then:
+```bash
+brew install ollama
+```
+
 ```bash
 ollama pull phi4
 ollama pull llama3.2:1b
