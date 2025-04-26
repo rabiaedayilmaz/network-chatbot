@@ -27,7 +27,7 @@ brew install ollama
 ```
 
 ```bash
-ollama pull phi4
+ollama pull qwen2.5:14b
 ollama pull llama3.2:1b
 ```
 
