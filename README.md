@@ -2,7 +2,7 @@
 
 - AI assistant specializing in European languages
 - When needed uses function calls
-- Open source model will be used (default phi4)
+- Open source models will be used (default qwen2.5 (14b) for answering and gemma3 (4b) for selecting agent)
 
 Setup and run:
 
@@ -26,9 +26,10 @@ Install ollama from official website, then:
 brew install ollama
 ```
 
+QWen2.5 14B is selected due to long contexts up to 128K tokens, plus multilingual capabilities for over 29 languages.
 ```bash
 ollama pull qwen2.5:14b
-ollama pull llama3.2:1b
+ollama pull gemma3
 ```
 
 ```bash
