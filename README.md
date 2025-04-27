@@ -60,7 +60,7 @@ python3 main.py
 
 To run tests:
 ```bash
-pytest3 test/
+pytest test/
 ```
 
 ## Usage
