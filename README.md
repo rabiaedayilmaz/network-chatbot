@@ -5,9 +5,9 @@
 - Open source models are used (default phi4 (14b) for answering and gemma3 (4b) for selecting agent)
 - Customizable and extensible framework for building intelligent conversational agents
 
-<div style="text-align: center;">
-    <img src="assets/chat-agent.png" alt="Chat Agent Diagram" width="80%">
-</div>
+<p align="center">
+  <img src="assets/chat-agent.png" alt="Chat Agent Diagram" width="80%">
+</p>
 
 ## Features
 * Multilingual Support 
