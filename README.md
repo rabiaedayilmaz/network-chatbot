@@ -5,6 +5,8 @@
 - Open source models are used (default phi4 (14b) for answering and gemma3 (4b) for selecting agent)
 - Customizable and extensible framework for building intelligent conversational agents
 
+![Chat Agent Diagram](assets/chat-agent.png)
+
 ## Features
 * Multilingual Support 
     * (Prompts and pipelines optimized for Turkish and English.)
