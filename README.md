@@ -41,7 +41,7 @@ Install ollama from official website, then:
 brew install ollama
 ```
 
-Phi4 14B is selected due to long contexts up to 128K tokens, plus multilingual capabilities for over 29 languages.
+Phi4 14B is selected due to long contexts up to 16k tokens and best performing model AMC 12/10 tests on November 2024, plus multilingual capabilities.
 Gemma3 is used for efficient agent and tool selection, also 4B little model.
 Download them using ollama.
 ```bash
