@@ -6,7 +6,10 @@ from llm.utils.tools.tools import AGENT_TOOLS
 from llm.model import AIModel
 from utils.log import logger
 from llm.agents.rag_agent import RagAgent
-from llm.utils.tools.hypernet_tools import run_speedtest_if_needed
+from llm.utils.tools.hypernet_funcs import run_speedtest_if_needed
+from llm.utils.tools.professor_ping_funcs import draw_topology_diagram
+from llm.utils.tools.bytefix_funcs import BYTEFIX_TOOL_HANDLERS
+from llm.utils.tools.helpers.select_tools import select_bytefix_tool
 
 
 class AIChatAgent(BaseChatAgent):
@@ -45,6 +48,26 @@ class AIChatAgent(BaseChatAgent):
             if speedtest_results:
                 user_query = f"{user_query}\n\n Speed Results: {speedtest_results} I will inform you about the speed test results."
                 logger.info("Speedtest results appended to user query.")
+        elif persona == "professor_ping":
+            topology_diagram = await draw_topology_diagram(user_query)
+        
+            if topology_diagram:
+                logger.info("Topology diagram - %s", topology_diagram)
+
+                user_query = f"{user_query}\n\n Topology Diagram: {topology_diagram} \nUse eaxctly this diagram."
+                logger.info("Topology diagram appended to user query.")
+        elif persona == "bytefix":
+            result = select_bytefix_tool(user_query)
+            if result:
+                tool_name, parameters = result
+                if tool_name in BYTEFIX_TOOL_HANDLERS:
+                    tool_handler = BYTEFIX_TOOL_HANDLERS[tool_name]
+                    result = tool_handler(**parameters)
+                    logger.info("Bytefix tool result - %s", result)
+                    user_query = f"Results of {tool_name}: {result} \nUse this result to inform user."
+                    logger.info("Bytefix tool response appended to user query.")
+            else:
+                logger.info("No valid bytefix tool selected.")
 
         model = AIModel(**self.model_params)
         ai_response = await model.ask_to_model(
@@ -70,7 +93,7 @@ class AIChatAgent(BaseChatAgent):
 
 async def main():
     chat_history = []
-    user_query = "wifi nedir öğrenmek istiyorum"
+    user_query = "star topolojisini çizebilir misin?"
     ai_response, persona = await AIChatAgent().ask_agent(user_query=user_query, chat_history=chat_history)
     print("User:")
     print(user_query)
