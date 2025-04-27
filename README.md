@@ -58,6 +58,11 @@ Start the chat agent:
 python3 main.py
 ```
 
+To run tests:
+```bash
+pytest3 test/
+```
+
 ## Usage
 
 | Example 1 | Example 2 |
