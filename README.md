@@ -24,7 +24,7 @@
 
 Clone repo:
 ```bash
-git clone https://github.com/rabiaedayilmaz/network-chatbot.git
+git clone https://github.com/rabiaedayilmaz/network-chatbot-agent.git
 cd network-chatbot
 ```
 
