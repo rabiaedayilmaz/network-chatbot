@@ -8,11 +8,11 @@ def create_selection_prompt(user_query: str) -> str:
     Kullanıcı sorusu: {user_query}
     Mevcut ajanlar ve araçlar:
     - fixie: ortak ağ sorunları, yönlendirici sorun giderme
-    - bytefix: ağ teşhisi
+    - bytefix: ağ teşhisi, ağ sorunları giderme testi, diagnostik test
     - routerx: ağ yapılandırma
     - sentinel: ağ güvenliği tarama, VPN güvenliği
     - hypernet: hız testi
-    - professor_ping: ağ kavramlarını açıklama
+    - professor_ping: ağ kavramlarını açıklama, topoloji diyagramı çizme
     Soru hangi ajanla en alakalı? Yanıtı TAM OLARAK şu formatta döndür:
     agent: <agent_name>
     """
@@ -40,7 +40,7 @@ def select_agent(user_query: str, decider_model: str = "gemma3") -> str:
     )
 
     response_text = response["message"].get("content", "").strip()
-    logger.info(f"Response of decider model: {response_text}")
+    logger.info(f"Response of decider model - {response_text}")
 
     selected_agent = parse_agent_response(response_text)
 
