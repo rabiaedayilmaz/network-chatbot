@@ -25,7 +25,8 @@ AGENT_TOOLS = {
                 "description": "Runs advanced network diagnostic commands like ping, traceroute, and nslookup.",
                 "parameters": {"type": "object", "properties": {"target": {"type": "string"}}, "required": ["target"]},
             },
-        }
+        },
+        
     ],
     "routerx": [
         {
@@ -69,10 +70,30 @@ AGENT_TOOLS = {
         {
             "type": "function",
             "function": {
-                "name": "professor_ping_explain_networking",
-                "description": "Explains networking concepts in a simple way.",
-                "parameters": {"type": "object", "properties": {"topic": {"type": "string"}}, "required": ["topic"]},
-            },
+            "name": "professor_ping_explain_networking",
+            "description": "Explains networking concepts in a simple way.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                "topic": {"type": "string"}
+                },
+                "required": ["topic"]
+            }
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+            "name": "professor_ping_draw_topology_diagram",
+            "description": "Creates an ASCII network topology diagram for a given scenario.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                "scenario": {"type": "string"}
+                },
+                "required": ["scenario"]
+            }
+            }
         }
     ],
 }
