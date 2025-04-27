@@ -1,8 +1,8 @@
 ## Chatbot
 
-- AI assistant specializing in European languages
-- When needed uses function calls
-- Open source models will be used (default qwen2.5 (14b) for answering and gemma3 (4b) for selecting agent)
+- AI assistant, targeted multi-linguality
+- When needed uses functions as tools
+- Open source models are used (default qwen2.5 (14b) for answering and gemma3 (4b) for selecting agent)
 
 Setup and run:
 
