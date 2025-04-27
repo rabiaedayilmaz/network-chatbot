@@ -60,6 +60,18 @@ python3 main.py
 
 ## Usage
 
+<div style="display: flex; gap: 10px;">
+  <video width="320" height="240" controls>
+    <source src="assets/1111.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  
+  <video width="320" height="240" controls>
+    <source src="assets/2222.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
 Ask questions like:
 * kalabalık alanlarda nasıl daha hızlı internete erişirim
 * internet hız testi
