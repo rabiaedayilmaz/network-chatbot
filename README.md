@@ -6,7 +6,7 @@
 - Customizable and extensible framework for building intelligent conversational agents
 
 <p align="center">
-  <img src="assets/chat-agent.png" alt="Chat Agent Diagram" width="80%">
+  <img src="assets/chat-agent.png" alt="Chat Agent Diagram" width="60%">
 </p>
 
 ## Features
