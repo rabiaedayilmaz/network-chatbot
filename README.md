@@ -60,7 +60,7 @@ python3 main.py
 
 ## Usage
 
-| Video 1 | Video 2 |
+| Example 1 | Example 2 |
 |---------|---------|
 | ![Video 1](assets/1111.gif) | ![Video 2](assets/2222.gif) |
 
