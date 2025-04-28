@@ -5,22 +5,32 @@ from datetime import datetime
 import re
 from PIL import Image
 from llm.chat import handle_user_query
+import base64
+
+
+def image_to_base64(image_path):
+    """Converts an image to a base64 string."""
+    with open(image_path, "rb") as img_file:
+        b64_data = base64.b64encode(img_file.read()).decode()
+    return f"data:image/png;base64,{b64_data}"
+
 
 st.set_page_config(page_title="Network Chatbot", page_icon="🌐", layout="centered")
 st.title("🌐 Network Chatbot")
 
-# Initialize chat history and session ID in session state
+# init chat history and session ID 
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid4())
 
-# State to track if the bot is currently processing
+# to track if the bot is currently processing
 if "processing_query" not in st.session_state:
-    st.session_state.processing_query = None # Stores the query being processed
+    # stores the query being processed
+    st.session_state.processing_query = None 
 
-# CSS injection for chat bubbles and spinner
+# css for chat bubbles and spinner
 def inject_css():
     st.markdown("""
         <style>
@@ -44,8 +54,8 @@ def inject_css():
             flex-shrink: 0; /* Prevent shrinking */
         }
         .chat-bubble-user {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #c7e6d7;
+            color: black;
             padding: 10px;
             border-radius: 15px;
             max-width: 70%;
@@ -110,40 +120,34 @@ def inject_css():
 
 inject_css()
 
-# Avatars
-USER_AVATAR = "https://api.dicebear.com/7.x/initials/svg?seed=User" # Using a placeholder avatar
-BOT_AVATAR = "https://api.dicebear.com/7.x/initials/svg?seed=AI"   # Using a placeholder avatar
+# avatar icons
+USER_AVATAR = image_to_base64("assets/user.png")
+BOT_AVATAR = image_to_base64("assets/ai.png")
 
-# Helper function to clean user input
+# helper func to clean user input
 def clean_user_input(text):
     """Triple backticks ve kod bloklarını temizler."""
     # This regex removes triple backticks and anything between them
     return re.sub(r"```.*?```", "", text, flags=re.DOTALL).strip()
 
-# Async function to handle streaming the response into a placeholder
+# ssync function to handle streaming the response into a placeholder
 async def stream_response_to_placeholder(session_id, user_query, chat_history_for_llm, placeholder):
     """Streams the AI response chunks into a Streamlit placeholder."""
     ai_generator = await handle_user_query(
         session_id=session_id,
         user_query=user_query,
         chat_history=chat_history_for_llm,
-        stream_to_terminal=False # Ensure streaming is handled by the generator
+        stream_to_terminal=False
     )
 
     full_response_content = ""
     start_time = datetime.now().strftime("%H:%M")
-
-    # Display initial bot structure with loading indicator maybe? Or just empty bubble
-    # Let's start with an empty bubble and stream into it.
-    # The spinner is handled outside this function.
 
     try:
         async for part in ai_generator:
             chunk = part['message']['content']
             full_response_content += chunk
 
-            # Update the placeholder with the accumulated content and bot bubble styling
-            # We use the bot avatar and bubble CSS
             placeholder.markdown(f"""
                 <div class="chat-container">
                     <img src="{BOT_AVATAR}" class="chat-avatar">
@@ -153,11 +157,9 @@ async def stream_response_to_placeholder(session_id, user_query, chat_history_fo
                     </div>
                 </div>
             """, unsafe_allow_html=True)
-            # A small sleep helps visualize the streaming effect
-            await asyncio.sleep(0.01) # Adjust speed if needed
+            await asyncio.sleep(0.01)
 
     except Exception as e:
-        # Handle potential errors during streaming
         error_message = f"An error occurred: {e}"
         full_response_content += "\n\n" + error_message
         placeholder.markdown(f"""
@@ -173,13 +175,10 @@ async def stream_response_to_placeholder(session_id, user_query, chat_history_fo
 
 
     final_timestamp = datetime.now().strftime("%H:%M")
-    # Return the final content and timestamp to be added to history
     return full_response_content, final_timestamp
 
 
-# --- Main Chat Rendering and Input ---
-
-# Display existing messages in chat history
+# display existing messages in chat history
 for chat in st.session_state.chat_history:
     role = chat.get("role", "user")
     content = chat.get("content", "")
@@ -196,7 +195,6 @@ for chat in st.session_state.chat_history:
             </div>
         """, unsafe_allow_html=True)
     else: # role == "assistant"
-         # For historical bot messages (not currently streaming), render them fully
          st.markdown(f"""
             <div class="chat-container">
                 <img src="{BOT_AVATAR}" class="chat-avatar">
@@ -208,10 +206,9 @@ for chat in st.session_state.chat_history:
         """, unsafe_allow_html=True)
 
 
-# Chat input for the user
-user_query = st.chat_input("Mesajını yaz...")
+user_query = st.chat_input("Seni dinliyorum...")
 
-# Process user query if submitted and bot is not already thinking
+# process user query if submitted and bot is not already thinking
 if user_query and st.session_state.processing_query is None:
     timestamp = datetime.now().strftime("%H:%M")
     cleaned_query = clean_user_input(user_query)
@@ -223,14 +220,13 @@ if user_query and st.session_state.processing_query is None:
         "timestamp": timestamp
     })
 
-    # Store the query to be processed in session state and trigger rerun
     st.session_state.processing_query = cleaned_query
-    st.rerun() # Rerun the script to show user message and start processing
+    st.rerun()
 
 
-# If there's a query waiting to be processed, handle it now
+# if there's a query waiting to be processed, handle it now
 if st.session_state.processing_query:
-    # Display the "Thinking..." spinner
+    # display spinner
     spinner_placeholder = st.markdown("""
         <div class="loading-container">
             <div class="loading-dot"></div>
@@ -240,38 +236,30 @@ if st.session_state.processing_query:
         </div>
     """, unsafe_allow_html=True)
 
-    # Create an empty placeholder for the bot's streaming response
     bot_response_placeholder = st.empty()
 
-    # Get the query to process and clear the state flag
     query_to_process = st.session_state.processing_query
-    st.session_state.processing_query = None # Clear the flag
+    st.session_state.processing_query = None 
 
-    # Get the history *before* this current turn for the LLM call
-    # Assuming handle_user_query needs history up to the latest user turn
-    # If history should NOT include the current user message for handle_user_query,
-    # slice chat_history accordingly: st.session_state.chat_history[:-1]
     history_for_llm = st.session_state.chat_history
 
-    # Run the asynchronous streaming process
     final_content, final_timestamp = asyncio.run(
         stream_response_to_placeholder(
             st.session_state.session_id,
             query_to_process,
             history_for_llm,
-            bot_response_placeholder # Pass the placeholder to stream into
+            bot_response_placeholder 
         )
     )
 
-    # Once streaming is complete, clear the spinner
+    # clear the spinner when streaming is done
     spinner_placeholder.empty()
 
-    # Add the completed bot message to the chat history
+    # add completed message to the chat history
     st.session_state.chat_history.append({
         "role": "assistant",
         "content": final_content,
         "timestamp": final_timestamp
     })
 
-    # Rerun the script to display the complete history correctly
     st.rerun()
