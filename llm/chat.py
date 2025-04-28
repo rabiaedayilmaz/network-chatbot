@@ -16,10 +16,10 @@ async def handle_user_query(session_id, user_query, chat_history: list = [], lan
         print("\n")
         logger.info("AI response is sent.")
 
-    return ai_response
+    return ai_response, persona
 
 
 if __name__ == "__main__":
     user_query = "My internet is very slow and buffering all the time. What can I do?"
     session_id = "123456"
-    ai_response = asyncio.run(handle_user_query(session_id, user_query, stream_to_terminal=True))
+    ai_response, persona = asyncio.run(handle_user_query(session_id, user_query, stream_to_terminal=True))
