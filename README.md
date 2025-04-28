@@ -71,6 +71,11 @@ To run tests:
 pytest test/
 ```
 
+Run web interface for testing via Streamlit:
+```bash
+streamlit run app.py --server.runOnSave=false
+```
+
 ## Usage
 
 | Example 1 | Example 2 |
