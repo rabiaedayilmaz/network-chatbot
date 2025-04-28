@@ -54,7 +54,7 @@ class AIChatAgent(BaseChatAgent):
             if topology_diagram:
                 logger.info("Topology diagram - %s", topology_diagram)
 
-                user_query = f"{user_query}\n\n Topology Diagram: {topology_diagram} \nUse eaxctly this diagram."
+                user_query = f"{user_query}\n\n Topology Diagram: {topology_diagram} \nUse exactly this diagram."
                 logger.info("Topology diagram appended to user query.")
         elif persona == "bytefix":
             result = select_bytefix_tool(user_query)
