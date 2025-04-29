@@ -12,7 +12,7 @@ from llm.utils.prompts import get_system_prompt
 @dataclass
 class AIModel:
     system_prompt: str = field(default="")
-    model: str = field(default="phi4")
+    model: str = field(default="gemma3:12b-it-q4_K_M")
     language_mode: str = field(default="tr")
     temperature: float = field(default=0.1)
     max_tokens: int = field(default=256)
