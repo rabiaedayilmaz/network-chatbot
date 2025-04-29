@@ -2,11 +2,11 @@
 
 - AI assistant, targeted multi-linguality
 - When needed uses functions as tools
-- Open source models are used (default phi4 (14b) for answering and gemma3 (4b) for selecting agent)
+- Open source models are used (default gemma3:12b-it-q4_K_M (12b) for answering and gemma3 (4b) for selecting agent)
 - Customizable and extensible framework for building intelligent conversational agents
 
 <p align="center">
-  <img src="assets/chat-agent.png" alt="Chat Agent Diagram" width="60%">
+  <img src="assets/chat-agent-v2.png" alt="Chat Agent Diagram" width="60%">
 </p>
 
 ## Features
@@ -53,11 +53,11 @@ Install ollama from official website, then:
 brew install ollama
 ```
 
-Phi4 14B is selected due to long contexts up to 16k tokens and best performing model AMC 12/10 tests on November 2024, plus multilingual capabilities.
+gemma3:12b-it-q4_K_M 12B is selected due to long contexts up to 16k tokens and best performing model AMC 12/10 tests on November 2024, plus multilingual capabilities.
 Gemma3 is used for efficient agent and tool selection, also 4B little model.
 Download them using ollama.
 ```bash
-ollama pull phi4
+ollama pull gemma3:12b-it-q4_K_M
 ollama pull gemma3
 ```
 
@@ -90,7 +90,7 @@ Ask questions like:
 * güvenli internet ipuçları
 
 ### Agents
-There are 6 agents and each of them has own personality. Gemma3 will select appropriate agent and tools. Then, Phi4 will answer your problem using them.
+There are 6 agents and each of them has own personality. Gemma3 will select appropriate agent and tools. Then, gemma3:12b-it-q4_K_M will answer your problem using them.
 - Fixie: Support agent, can use RAG tools.
 - Bytefix: Technical network agent, can use shell command tools (ping, tracerouter, nslookup) for given host or IP address.
 - RouterX: Network engineer agent, makes suggestions.
@@ -123,4 +123,4 @@ For any questions/suggestions [mail](edayilmxz@outlook.com) us!
 
 ## Acknowledgments
 * Ollama for providing an easy-to-use platform for running AI models.
-* Phi4 and Gemma3 for their open-source models.
+* gemma3:12b-it-q4_K_M and Gemma3 for their open-source models.
