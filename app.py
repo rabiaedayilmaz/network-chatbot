@@ -60,11 +60,7 @@ def escape_html_with_breaks(text):
     return html.escape(text).replace("\n", "<br>")
 
 AGENTS_WITH_B64_AVATARS = {}
-DEFAULT_AGENT_INFO_B64 = {
-    "name": "Genel Asistan",
-    "description": "Genel asistan.",
-    "avatar_b64": "" 
-}
+DEFAULT_AGENT_INFO_B64 = AGENTS["fixie"]
 
 # place all agents inside dict
 for agent_key, agent_info in AGENTS.items():
@@ -79,8 +75,8 @@ for agent_key, agent_info in AGENTS.items():
 USER_AVATAR_B64 = image_to_base64("assets/user.png") # Lütfen assets/user.png dosyasının var olduğundan emin olun
 
 
-st.set_page_config(page_title="Network Chatbot Agents", page_icon="🌐", layout="centered")
-st.title("🌐 Network Chatbot Agents")
+st.set_page_config(page_title="Ağ Uzmanı Agent Takımı", page_icon="🌐", layout="centered")
+st.title("🌐 Ağ Uzmanı Agent Takımı")
 
 ### states
 if "chat_history" not in st.session_state:
@@ -93,7 +89,7 @@ if "processing_query" not in st.session_state:
     st.session_state.processing_query = None 
 
 if "current_llm_agent_key" not in st.session_state:
-     st.session_state.current_llm_agent_key = "fixie" # Örnek: Başlangıç agent'ı fixie
+     st.session_state.current_llm_agent_key = "fixie"
 
 # css for chat bubbles and spinner
 def inject_css():
@@ -279,15 +275,15 @@ async def stream_response_to_placeholder(session_id, user_query, chat_history_fo
 
 
 # sidebar - agent info
-st.sidebar.title("Aktif Agent")
+st.sidebar.title("Son Aktif Agent")
 
 current_agent_key = st.session_state.current_llm_agent_key
-agent_info_display = AGENTS.get(current_agent_key, AGENTS.get("fixie")) # if found none, default to fixie
+agent_info_display = AGENTS.get(current_agent_key, AGENTS["fixie"]) # if found none, default to fixie
 
 st.sidebar.image(agent_info_display["avatar_path"], width=50)
 
 st.sidebar.markdown(f"**{agent_info_display["name"]}**")
-st.sidebar.caption(agent_info_display["description"])
+#st.sidebar.caption(agent_info_display["description"])
 
 user_query = st.chat_input("Mesajını yaz...", disabled=st.session_state.processing_query is not None)
 
@@ -337,11 +333,11 @@ for chat in st.session_state.chat_history:
             </div>
         """, unsafe_allow_html=True)
     elif role == "assistant": # role == "assistant"
-         agent_info_for_display = AGENTS_WITH_B64_AVATARS.get(persona_key_in_history, DEFAULT_AGENT_INFO_B64)
+         agent_info_for_display = AGENTS_WITH_B64_AVATARS.get(persona_key_in_history, "fixie")
 
          agent_avatar_to_display = agent_info_for_display.get("avatar_b64", "")
          agent_name_to_display = agent_info_for_display.get("name", "Bot")
-         st.session_state.current_llm_agent_key = agent_name_to_display
+         st.session_state.current_llm_agent_key = persona_key_in_history
 
 
          st.markdown(f"""
@@ -407,7 +403,7 @@ if st.session_state.processing_query:
 
     st.session_state.chat_history.append({
         "role": "assistant",
-        "content": final_content,
+        "content": escape_html_with_breaks(final_content),
         "timestamp": final_timestamp,
         "agent": completed_agent_key
     })
