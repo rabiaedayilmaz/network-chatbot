@@ -87,7 +87,9 @@ Ask questions like:
 * internet hız testi
 * yıldız topolojisini açıklar mısın
 * github.com için teşhis yap
-* güvenli internet ipuçları
+* phishing saldırılarını nasıl tanırım
+* ip adresim ne işe yarar
+* modemim sık sık kopuyor
 
 ### Agents
 There are 6 agents and each of them has own personality. Gemma3 will select appropriate agent and tools. Then, gemma3:12b-it-q4_K_M will answer your problem using them.
@@ -119,7 +121,7 @@ Contributions are welcome! To contribute:
 - Push to the branch (git push origin feature/your-feature).
 - Open a pull request.
 
-For any questions/suggestions [mail](edayilmxz@outlook.com) me! 
+For any questions/suggestions [mail](edayilmxz@outlook.com) us! 
 
 ## Acknowledgments
 * Ollama for providing an easy-to-use platform for running AI models.
