@@ -14,7 +14,7 @@
     * (Prompts and pipelines optimized for Turkish and English.)
 * Tool Integration
 * Open-Source Models:
-    * Phi (14B): Default model for answering, capable of handling long contexts up to 128K tokens.
+    * gemma3:12b-it-q4_K_M (12B): Default model for answering.
     * Gemma3 (4B): Used for agent selection to optimize performance.
 
 ## Prerequisites
