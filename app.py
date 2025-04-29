@@ -6,7 +6,7 @@ import re
 from llm.chat import handle_user_query
 import base64
 import os 
-
+import html
 
 
 AGENTS = {
@@ -61,6 +61,9 @@ def image_to_base64(image_path):
     except Exception as e:
         print(f"Error encoding image {image_path}: {e}")
         return ""
+    
+def escape_html_with_breaks(text):
+    return html.escape(text).replace("\n", "<br>")
 
 AGENTS_WITH_B64_AVATARS = {}
 DEFAULT_AGENT_INFO_B64 = {
@@ -259,7 +262,7 @@ async def stream_response_to_placeholder(session_id, user_query, chat_history_fo
                          <div>
                               <div class="agent-name">{current_persona_display_name}</div>
                               <div class="chat-bubble-bot">
-                                 {full_response_content}
+                                 {escape_html_with_breaks(full_response_content)}
                                  <div class="timestamp-bot">{start_time}</div>
                              </div>
                          </div>
@@ -277,7 +280,7 @@ async def stream_response_to_placeholder(session_id, user_query, chat_history_fo
                 <div>
                     <div class="agent-name">{current_persona_display_name} (Hata)</div>
                     <div class="chat-bubble-bot" style="background-color: #F8D7DA; color: #721C24;">
-                        {full_response_content}
+                        {escape_html_with_breaks(full_response_content)}
                         <div class="timestamp-bot">{start_time}</div>
                     </div>
                 </div>
