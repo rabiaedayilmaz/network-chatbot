@@ -73,7 +73,7 @@ pytest test/
 
 Run web interface for testing via Streamlit:
 ```bash
-streamlit run app.py --server.runOnSave=false
+streamlit run app.py
 ```
 
 ## Usage
@@ -86,8 +86,8 @@ Ask questions like:
 * kalabalık alanlarda nasıl daha hızlı internete erişirim
 * internet hız testi
 * yıldız topolojisini açıklar mısın
-* diagnostik teşhis github.com
-* güvenli internet kullanma alışkanlıkları
+* github.com için teşhis yap
+* güvenli internet ipuçları
 
 ### Agents
 There are 6 agents and each of them has own personality. Gemma3 will select appropriate agent and tools. Then, Phi4 will answer your problem using them.
@@ -97,6 +97,18 @@ There are 6 agents and each of them has own personality. Gemma3 will select appr
 - Sentinel: Security agent, makes suggestions.
 - Hypernet: Speed optimizer agent, can use internet speed test tool.
 - Prof. Ping: Instructor agent, can use topology drawing tool.
+
+### Agent Samples
+
+| Agent | Screenshot |
+|-------|------------|
+| **Bytefix** | ![](assets/sample_bytefix.png) |
+| **Fixie** | ![](assets/sample_fixie.png) |
+| **Hypernet** | ![](assets/sample_hypernet.png) |
+| **Professor Ping** | ![](assets/sample_prof_ping.png) |
+| **RouterX** | ![](assets/sample_routerx.png) |
+| **Sentinel**| ![](assets/sample_sentinel.png) |
+
 
 ## Contributing
 Contributions are welcome! To contribute:
