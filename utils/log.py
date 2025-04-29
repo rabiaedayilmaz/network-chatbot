@@ -3,7 +3,7 @@ import logging.handlers as handlers
 import os
 
 
-LOG_FILE_PATH = f'./logs/server.log'
+LOG_FILE_PATH = f'{os.environ["PYTHONPATH"]}/logs/server.log'
 
 formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s')
 
