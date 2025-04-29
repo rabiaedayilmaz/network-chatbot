@@ -11,7 +11,7 @@ import html
 
 AGENTS = {
     "fixie": {
-        "name": "Fixie (Support Bot)",
+        "name": "Fixie (Destek Botu)",
         "avatar_path": "assets/fixie_avatar_chat.jpg", 
         "description": "Kullanıcı dostu, kolay çözümler sunan destek botu."
     },
@@ -133,7 +133,7 @@ def inject_css():
             color: black;
             padding: 10px;
             border-radius: 15px;
-            max-width: 70%;
+            max-width: 400px;
             margin-right: auto; /* Stay on the left */
             margin-left: 10px;
             word-wrap: break-word; /* Break long words */
