@@ -18,34 +18,28 @@ AGENTS = {
     "bytefix": {
         "name": "Bytefix (Teknik Uzman)",
         "avatar_path": "assets/bytefix_avatar_chat.jpg", 
-        "description": "Detaylı teknik ağ sorun giderme konusunda uzman."
+        "description": "Detaylı teknik ağ sorun giderme uzmanı."
     },
     "routerx": {
          "name": "RouterX (Ağ Mühendisi)",
          "avatar_path": "assets/routerx_avatar_chat.png", 
-         "description": "Kurumsal düzeyde ağ altyapısı optimizasyonu ve yapılandırması."
+         "description": "Ağ altyapısı optimizasyonu ve yapılandırma uzmanı."
     },
     "sentinel": {
          "name": "Sentinel (Siber Güvenlik)",
          "avatar_path": "assets/sentinel_avatar_chat.png", 
-         "description": "Ağ güvenliği, tehditler ve korunma yolları hakkında danışman."
+         "description": "Ağ güvenliği, tehditler ve korunma yolları danışmanı."
     },
     "hypernet": {
          "name": "HyperNet (Hız Uzmanı)",
          "avatar_path": "assets/hypernet_avatar_chat.jpg", 
-         "description": "İnternet hızını artırma ve optimizasyon konusunda uzman."
+         "description": "İnternet hızını artırma ve optimizasyon uzmanı."
     },
     "professor_ping": {
           "name": "Professor Ping (Ağ Eğitmeni)",
           "avatar_path": "assets/prof_ping_avatar_chat.png",
           "description": "Ağ kavramlarını anlaşılır ve eğlenceli bir şekilde öğretir."
-    },
-    # default fallback agent?
-     "general_assistant": {
-          "name": "Genel Asistan",
-          "avatar_path": "assets/ai.png", 
-          "description": "Genel konular ve çeşitli sorularınız için buradayım."
-      }
+    }
 }
 
 def image_to_base64(image_path):
@@ -79,16 +73,6 @@ for agent_key, agent_info in AGENTS.items():
         "description": agent_info["description"],
         "avatar_b64": image_to_base64(agent_info["avatar_path"])
     }
-
-if "general_assistant" in AGENTS and "general_assistant" not in AGENTS_WITH_B64_AVATARS:
-    AGENTS_WITH_B64_AVATARS["general_assistant"] = {
-         "name": AGENTS["general_assistant"]["name"],
-         "description": AGENTS["general_assistant"]["description"],
-         "avatar_b64": image_to_base64(AGENTS["general_assistant"]["avatar_path"])
-    }
-    DEFAULT_AGENT_INFO_B64 = AGENTS_WITH_B64_AVATARS["general_assistant"]
-elif "general_assistant" in AGENTS_WITH_B64_AVATARS:
-     DEFAULT_AGENT_INFO_B64 = AGENTS_WITH_B64_AVATARS["general_assistant"]
 
 
 # base64 avatar
@@ -298,10 +282,41 @@ async def stream_response_to_placeholder(session_id, user_query, chat_history_fo
 st.sidebar.title("Aktif Agent")
 
 current_agent_key = st.session_state.current_llm_agent_key
-agent_info_display = AGENTS.get(current_agent_key, AGENTS.get("general_assistant", {"name": "Bilinmeyen Agent", "description": "Tanımlanamayan agent."})) # Eğer key yoksa varsayılanı göster
+agent_info_display = AGENTS.get(current_agent_key, AGENTS.get("fixie")) # if found none, default to fixie
 
-st.sidebar.subheader(agent_info_display["name"])
-st.sidebar.info(agent_info_display["description"])
+st.sidebar.image(agent_info_display["avatar_path"], width=50)
+
+st.sidebar.markdown(f"**{agent_info_display["name"]}**")
+st.sidebar.caption(agent_info_display["description"])
+
+user_query = st.chat_input("Mesajını yaz...", disabled=st.session_state.processing_query is not None)
+
+st.sidebar.markdown("### 🤖 Agent Listesi")
+
+for key, agent in AGENTS.items():
+    # Highlight the active one with a subtle background or style
+    if key == current_agent_key:
+        st.sidebar.markdown(
+            f"""
+            <div style="background-color: #d1c9d5; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+                <img src="{image_to_base64(agent['avatar_path'])}" width="30" style="vertical-align: middle; border-radius: 50%; margin-right: 10px;">
+                <b>{agent['name']}</b><br>
+                <span style="font-size: 12px; color: #555;">{agent['description']}</span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.sidebar.markdown(
+            f"""
+            <div style="margin-bottom: 8px;">
+                <img src="{image_to_base64(agent['avatar_path'])}" width="30" style="vertical-align: middle; border-radius: 50%; margin-right: 10px;">
+                <b>{agent['name']}</b><br>
+                <span style="font-size: 12px; color: #555;">{agent['description']}</span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 
 # existing messages in chat history
@@ -342,8 +357,6 @@ for chat in st.session_state.chat_history:
             </div>
         """, unsafe_allow_html=True)
 
-
-user_query = st.chat_input("Mesajını yaz...", disabled=st.session_state.processing_query is not None)
 
 if user_query and st.session_state.processing_query is None:
     timestamp = datetime.now().strftime("%H:%M")
