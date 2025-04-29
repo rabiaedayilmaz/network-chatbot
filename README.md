@@ -119,7 +119,7 @@ Contributions are welcome! To contribute:
 - Push to the branch (git push origin feature/your-feature).
 - Open a pull request.
 
-For any questions/suggestions [mail](edayilmxz@outlook.com) us! 
+For any questions/suggestions [mail](edayilmxz@outlook.com) me! 
 
 ## Acknowledgments
 * Ollama for providing an easy-to-use platform for running AI models.
