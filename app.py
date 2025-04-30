@@ -76,6 +76,17 @@ USER_AVATAR_B64 = image_to_base64("assets/user.png") # Lütfen assets/user.png d
 
 
 st.set_page_config(page_title="Ağ Uzmanı Agent Takımı", page_icon="🌐", layout="centered")
+st.markdown("""
+    <style>
+        .reportview-container {
+            margin-top: -2em;
+        }
+        #MainMenu {visibility: hidden;}
+        .stAppDeployButton {display:none;}
+        footer {visibility: hidden;}
+        #stDecoration {display:none;}
+    </style>
+""", unsafe_allow_html=True)
 st.title("🌐 Ağ Uzmanı Agent Takımı")
 
 ### states
