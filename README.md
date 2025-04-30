@@ -2,6 +2,8 @@
 <p align="center">
   <img src="assets/joke.png" alt="Example Joke of Agent" width="65%">
 </p>
+
+
 - AI assistant, targeted multi-linguality
 - When needed uses functions as tools
 - Open source models are used (default gemma3:12b-it-q4_K_M (12b) for answering and gemma3 (4b) for selecting agent)
