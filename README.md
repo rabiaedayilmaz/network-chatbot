@@ -76,6 +76,12 @@ Run web interface for testing via Streamlit:
 streamlit run app.py
 ```
 
+To build container and deploy, one container is used for project app and other used for ollama models. 
+(Total ~8GB containers, machine needs 16GB RAM)
+```bash
+docker-compose up
+```
+
 ## Usage
 
 | Example 1 | Example 2 |
