@@ -3,6 +3,7 @@ FROM python:3.13-slim-bookworm
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     git \
+    docker.io \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /app/requirements.txt
@@ -12,13 +13,11 @@ ENV PYTHONPATH=/app
 
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-RUN curl -L https://ollama.com/download/install.sh | sh
-
 COPY . /app/
 
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
 EXPOSE 8501
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["bash", "-c", "chmod +x /app/start.sh && /app/start.sh"]
