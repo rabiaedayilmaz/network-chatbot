@@ -1,6 +1,6 @@
 # Network Issues Chat Agent
 <p align="center">
-  <img src="assets/assets/joke.png" alt="Example Joke of Agent" width="65%">
+  <img src="assets/joke.png" alt="Example Joke of Agent" width="65%">
 </p>
 - AI assistant, targeted multi-linguality
 - When needed uses functions as tools
