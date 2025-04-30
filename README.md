@@ -53,7 +53,7 @@ Install ollama from official website, then:
 brew install ollama
 ```
 
-gemma3:12b-it-q4_K_M 12B is selected due to long contexts up to 16k tokens and best performing model AMC 12/10 tests on November 2024, plus multilingual capabilities.
+gemma3:12b-it-q4_K_M (8.1GB) is selected due to balancing its significant 12 billion parameter count for strong performance with the reduced memory and computational requirements provided by Q4_K_M quantization.
 Gemma3 is used for efficient agent and tool selection, also 4B little model.
 Download them using ollama.
 ```bash
