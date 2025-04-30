@@ -135,4 +135,4 @@ For any questions/suggestions [mail](edayilmxz@outlook.com) us!
 
 ## Acknowledgments
 * Ollama for providing an easy-to-use platform for running AI models.
-* gemma3:12b-it-q4_K_M and Gemma3 for their open-source models.
+* Google for their open-source Gemma models.
