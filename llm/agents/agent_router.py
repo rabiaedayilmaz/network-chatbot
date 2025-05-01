@@ -6,13 +6,15 @@ from llm.agents.gemini_chat_agent import GeminiChatAgent
 from llm.utils.tools.hypernet_funcs import run_speed_test
 from llm.utils.tools.professor_ping_funcs import draw_topology_diagram
 from llm.utils.tools.bytefix_funcs import run_network_diagnostics
+from llm.agents.base_chat_agent import BaseChatAgent
 
 import asyncio
 import json
 from utils.log import logger
 
-class AgentRouter:
-    def __init__(self, agent_tools, chat_agent=None):
+class AgentRouter(BaseChatAgent):
+    def __init__(self, session_id: str = "", language_mode: str = "tr", agent_tools: dict = AGENT_TOOLS, chat_agent=None):
+        super().__init__(session_id=session_id, language_mode=language_mode)
         self.agent_tools = agent_tools
         self.chat_agent = chat_agent or GeminiChatAgent()
         # TODO: make all agents as class instances like fixie, hypernet, etc.
@@ -74,17 +76,26 @@ Respond in JSON format (no explanation, just the JSON): {{
         # TODO: use only asyync functions
         return await func(**parameters) if asyncio.iscoroutinefunction(func) else func(**parameters)
 
-    async def route_query(self, query, language_mode="tr"):
+    async def ask_agent(self, query, chat_history, language_mode="tr"):
+        # agent and function to route to
         route = await self.detect_agent_and_function(query)
         logger.info(f"Routing query to: {route}")
+
         if route["agent"].lower() in ("sentinel", "routerx"):
             user_response = await self.generate_user_response(query, route["parameters"], route["agent"], language_mode)
-            return {"raw": route["parameters"], "response": user_response}
+
+            chat_history.append({"role": "user", "content": query})
+            chat_history.append({"role": "assistant", "content": user_response})
+            return {"raw": route["parameters"], "response": user_response, "chat_history": chat_history}
 
         result = await self.execute_function(route["agent"], route["function"], route["parameters"])
         result = {route["function"]: result} if not isinstance(result, dict) else result
         user_response = await self.generate_user_response(query, result, route["agent"], language_mode)
-        return {"raw": result, "response": user_response, "agent": route["agent"], "function": route["function"]}
+
+        chat_history.append({"role": "user", "content": query})
+        chat_history.append({"role": "assistant", "content": user_response})
+
+        return {"raw": result, "response": user_response, "agent": route["agent"], "function": route["function"], "chat_history": chat_history}
 
     async def _describe_tools(self, agent_filter):
         tools = self.agent_tools[agent_filter]
@@ -120,7 +131,7 @@ async def main():
     from llm.utils.tools.tools import AGENT_TOOLS
     router = AgentRouter(agent_tools=AGENT_TOOLS, chat_agent=GeminiChatAgent())
     query = "ağ yapılandırma"
-    result = await router.route_query(query)
+    result = await router.ask_agent(query)
     print("\n=== User-friendly response ===")
     print(result["response"])
     print("\n=== Raw tool output ===")
