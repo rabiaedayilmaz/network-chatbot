@@ -32,18 +32,18 @@ git clone https://github.com/rabiaedayilmaz/network-chatbot-agent.git
 cd network-chatbot
 ```
 
-Set up a virtual environment.
-Opt1 - Using pip:
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-Opt2 - using uv:
+Set up a virtual environment. (uv is cool)
 ```bash
 curl -Ls https://astral.sh/uv/install.sh | sh
 uv venv .venv
 source .venv/bin/activate
-uv pip install -r <(uv pip compile pyproject.toml)
+uv pip install -r requirements.txt
+```
+or just `uv pip install -r <(uv pip compile pyproject.toml)`.
+
+Also to use some tools, you need to install locally to machine:
+```bash
+brew install nmap
 ```
 
 Install python dependencies:
