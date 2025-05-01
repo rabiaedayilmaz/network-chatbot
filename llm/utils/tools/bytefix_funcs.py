@@ -6,7 +6,7 @@ import sys
 from utils.log import logger
 
 
-def run_command(command):
+async def run_command(command):
     """Run a shell command and return the result."""
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True, check=True)
@@ -14,7 +14,7 @@ def run_command(command):
     except subprocess.CalledProcessError as e:
         return f"Error: {e.stderr}"
 
-def install_packages():
+async def install_packages():
     """Install required system packages based on the operating system."""
     os_name = platform.system().lower()
     packages = ["tcpdump", "iperf3"]
@@ -43,7 +43,7 @@ def install_packages():
         logger.info("Unsupported OS. For Windows, use WSL or install tools manually.")
         sys.exit(1)
 
-def check_tools():
+async def check_tools():
     """Check if required tools are installed."""
     tools = ["ping", "traceroute", "nslookup", "tcpdump", "iperf3"]
     missing = [tool for tool in tools if not shutil.which(tool)]
@@ -53,7 +53,7 @@ def check_tools():
     else:
         logger.info("All required tools are installed.")
 
-def run_network_diagnostics(target: str) -> str:
+async def run_network_diagnostics(target: str) -> str:
     """Execute ping, traceroute, and nslookup for the target."""
     try:
         ping_result = subprocess.run(["ping", "-c", "4", target], capture_output=True, text=True, check=True).stdout
@@ -75,13 +75,14 @@ def run_network_diagnostics(target: str) -> str:
         return json.dumps({"error": f"Command not found: {str(e)}"}, ensure_ascii=False)
     except Exception as e:
         return json.dumps({"error": str(e)}, ensure_ascii=False)
-    
-BYTEFIX_TOOL_HANDLERS = {
-    "bytefix_run_network_diagnostics": run_network_diagnostics,
-}
 
-if __name__ == "__main__":
-    check_tools()
+async def main():
+    await check_tools()
     target = "google.com"
     print(f"\nRunning network diagnostics for: {target}")
-    print(run_network_diagnostics(target))
+    result = await run_network_diagnostics(target)
+    print(result)
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())

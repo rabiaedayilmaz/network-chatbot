@@ -2,10 +2,7 @@ import speedtest
 from utils.log import logger
 
 
-async def run_speedtest_if_needed(persona: str) -> str | None:
-    if persona != "hypernet":
-        return None
-    
+async def run_speed_test() -> str | None:    
     try:
         st = speedtest.Speedtest()
         st.get_best_server()
