@@ -1,12 +1,12 @@
 import asyncio
-from llm.agents.chat_agent import AIChatAgent
+from llm.agents.local_chat_agent import LocalAIChatAgent
 from utils.log import logger
 
 
 async def handle_user_query(session_id, user_query, chat_history: list = [], language_mode="tr", stream_to_terminal: bool = False):
     """Handles a user query by selecting the correct AI agent and responding."""
     
-    agent = AIChatAgent(session_id=session_id, language_mode=language_mode)
+    agent = LocalAIChatAgent(session_id=session_id, language_mode=language_mode)
     ai_response, persona = await agent.ask_agent(user_query, chat_history)
     
     if stream_to_terminal:
