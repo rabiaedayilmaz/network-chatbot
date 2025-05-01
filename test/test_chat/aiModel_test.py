@@ -1,6 +1,6 @@
 import pytest
 from unittest import IsolatedAsyncioTestCase
-from llm.agents.chat_agent import AIChatAgent
+from llm.agents.local_chat_agent import LocalAIChatAgent
 
 class TestAIModel(IsolatedAsyncioTestCase):
 
@@ -8,7 +8,7 @@ class TestAIModel(IsolatedAsyncioTestCase):
         super(TestAIModel, self).__init__(*args, **kwargs)
 
         self.language = "tr"
-        self.agent = AIChatAgent(
+        self.agent = LocalAIChatAgent(
                             session_id="test_session_id",
                             language_mode=self.language,
                             )

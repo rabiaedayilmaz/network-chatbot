@@ -1,30 +1,30 @@
 import pytest
 from unittest import IsolatedAsyncioTestCase
-from llm.agents.chat_agent import AIChatAgent
+from llm.agents.local_chat_agent import LocalAIChatAgent
 
-class TestAIChatAgentRouterX(IsolatedAsyncioTestCase):
+class TestLocalAIChatAgentRouterX(IsolatedAsyncioTestCase):
     """
-    Test case for ensuring AIChatAgent selects 'routerx' persona correctly
+    Test case for ensuring LocalAIChatAgent selects 'routerx' persona correctly
     """
 
     def __init__(self, *args, **kwargs):
-        super(TestAIChatAgentRouterX, self).__init__(*args, **kwargs)
+        super(TestLocalAIChatAgentRouterX, self).__init__(*args, **kwargs)
         self.language = "tr"
-        self.agent = AIChatAgent(
+        self.local_agent = LocalAIChatAgent(
             session_id="test_session_id",
             language_mode=self.language,
         )
 
-    async def test_routerx_agent(self):
+    async def test_local_routerx_agent(self):
         """
-        Test if 'routerx' agent is selected and RAG tool is invoked for the query
+        Test if 'routerx' local_agent is selected and RAG tool is invoked for the query
         """
         # Given
         user_query = "ağ yapılandırma"
         chat_history = []
 
         # When
-        ai_response, persona = await self.agent.ask_agent(user_query, chat_history)
+        ai_response, persona = await self.local_agent.ask_agent(user_query, chat_history)
 
         # Then
         self.assertEqual(persona, "routerx", msg="Persona should be 'routerx' for this query.")
