@@ -5,9 +5,9 @@ from utils.log import logger
 
 def create_selection_prompt(user_query: str) -> str:
     agent_capabilities = """
-    - fixie: Ortak ağ sorunları (yavaş hız, kopmalar, Wi-Fi), yönlendirici sorun giderme, ISP görüşmesi için hazırlık. Kullanıcı dostu, adım adım çözümler.
-    - bytefix: Teknik kullanıcılar için. DNS, traceroute, ping, paket kaybı gibi websiteleri için teşhis görevlerini yapar.
-    - routerx: Routing, switching, VLAN, NAT ve firewall yapılandırması. Ayrıca WAN/LAN trafiğinde politikaya dayalı yönlendirme ve QoS optimizasyonu sağlar.
+    - fixie: Genel bağlantı sorunu giderme, ISP görüşmesi için hazırlık. Kullanıcı dostu, adım adım çözümler.
+    - bytefix: Teknik kullanıcılar için. DNS, traceroute, ping, paket kaybı gibi websiteleri için teşhis görevlerini yapar. Bir websiteye ping atar, DNS sorgusu yapar, traceroute çalıştırır. Kullanıcıdan hedef hostname veya IP adresi alır.
+    - routerx: Yönlendirme (routing), anahtarlama (switching), VLAN, NAT ve güvenlik duvarı (firewall) konularında uzmandır. LAN/WAN trafiği yönetimi ve QoS (Hizmet Kalitesi) yapılandırmaları üzerinde derin uzmanlığa sahiptir. Ağ altyapısının verimli çalışması için yapılandırma ve optimizasyon çözümleri sunar.
     - sentinel: Ağ güvenliği, Wi-Fi güvenliği, güvenlik duvarları, IDS/IPS, VPN'ler, siber tehditler (phishing, malware), pratik güvenlik adımları.
     - hypernet: İnternet hızı optimizasyonu, Wi-Fi yerleşimi/kanalları, hız testleri, gecikme/jitter sorunları, hızlı ve etkili çözümler.
     - professor_ping: Ağ kavramlarını açıklar (IP, DNS, TCP/IP, subnetting), topoloji çizer, temel başlangıç seviyesi sorun giderme. Eğlenceli, benzetmeler kullanır.
@@ -37,7 +37,7 @@ def fallback_to_tool_calls(response) -> str | None:
         for agent, tools in AGENT_TOOLS.items():
             if any(tool["function"]["name"] == selected_tool for tool in tools):
                 return agent
-    return None
+    return parse_agent_response(response.message.content)
 
 def select_agent(user_query: str, decider_model: str = "gemma3") -> str:
     prompt = create_selection_prompt(user_query)
@@ -56,11 +56,8 @@ def select_agent(user_query: str, decider_model: str = "gemma3") -> str:
     if not selected_agent or selected_agent not in AGENT_TOOLS:
         selected_agent = fallback_to_tool_calls(response)
 
-    if selected_agent in AGENT_TOOLS:
-        return selected_agent
+    return selected_agent
 
-    logger.warning("No valid agent selected, defaulting to fixie")
-    return "fixie"  # Default agent
 
 if __name__ == "__main__":
     #user_query = "bana ağ güvenliği konseptini açıklayabilir misin?"

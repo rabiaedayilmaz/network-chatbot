@@ -11,9 +11,9 @@ AGENT_TOOLS = {
         {
             "type": "function",
             "function": {
-                "name": "check_router_troubleshooting",
+                "name": "call_rag_tool",
                 "description": "Retrieves router troubleshooting steps from technical manuals.",
-                "parameters": {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]},
+                "parameters": {"type": "object", "properties": {"query": {"type": "string"}, "dataset_id": "network_troubleshooting", "tool_name": "check_router_troubleshooting"}, "required": ["query"]},
             },
         },
     ],
@@ -34,7 +34,7 @@ AGENT_TOOLS = {
             "function": {
                 "name": "run_speed_test",
                 "description": "Performs an internet speed test and analyzes results.",
-                "parameters": {"type": "object", "properties": {"server_location": {"type": "string"}}, "required": ["server_location"]},
+                "parameters": {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]},
             },
         }
     ],

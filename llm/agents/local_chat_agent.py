@@ -9,6 +9,7 @@ from llm.agents.rag_agent import RagAgent
 from llm.utils.tools.hypernet_funcs import run_speed_test
 from llm.utils.tools.professor_ping_funcs import draw_topology_diagram
 from llm.utils.tools.helpers.select_tools import select_bytefix_tool
+from llm.utils.tools.bytefix_funcs import run_network_diagnostics
 
 
 class LocalAIChatAgent(BaseChatAgent):
@@ -43,7 +44,7 @@ class LocalAIChatAgent(BaseChatAgent):
         if persona == "fixie":
             user_query = await self._run_rag_if_needed(persona, user_query)
         elif persona == "hypernet":
-            speedtest_results = await run_speed_test(persona)
+            speedtest_results = await run_speed_test()
             if speedtest_results:
                 user_query = f"{user_query}\n\n Speed Results: {speedtest_results} I will inform you about the speed test results."
                 logger.info("Speedtest results appended to user query.")
@@ -59,7 +60,7 @@ class LocalAIChatAgent(BaseChatAgent):
             result = select_bytefix_tool(user_query)
             if result:
                 tool_name, parameters = result
-                result = tool_name(**parameters)
+                result = run_network_diagnostics(**parameters)
                 logger.info("Bytefix tool result - %s", result)
                 user_query = f"Results of {tool_name}: {result} \nUse this result to inform user."
                 logger.info("Bytefix tool response appended to user query.")
@@ -90,7 +91,7 @@ class LocalAIChatAgent(BaseChatAgent):
 
 async def main():
     chat_history = []
-    user_query = "internetim kesilip duruyor"
+    user_query = "switching hub"
     ai_response, persona = await LocalAIChatAgent().ask_agent(user_query=user_query, chat_history=chat_history)
     print("User:")
     print(user_query)
