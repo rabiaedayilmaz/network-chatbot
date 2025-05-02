@@ -25,8 +25,12 @@ async def handle_user_query(
             logger.info("AI response is sent.")
     elif llm_backend == "gemini":
         ai_response = await AgentRouter(session_id=session_id, language_mode=language_mode).ask_agent(user_query, chat_history)
-        persona = ai_response["agent"]
-        ai_response = ai_response["response"]
+        if isinstance(ai_response, dict) and "agent" in ai_response and "response" in ai_response:
+            persona = ai_response["agent"]
+            ai_response = ai_response["response"]
+        else:
+            raise ValueError(f"Unexpected Gemini response: {ai_response}")
+
 
         if stream_to_terminal:
             print(f"{persona.upper()} is answering...")
@@ -41,7 +45,7 @@ async def handle_user_query(
 
 
 if __name__ == "__main__":
-    user_query = "My internet is very slow and buffering all the time. What can I do?"
+    user_query = "güvenli internet kullanımı"
     session_id = "123456"
     ai_response, persona = asyncio.run(handle_user_query(
         session_id, user_query, stream_to_terminal=True, llm_backend="gemini"

@@ -24,24 +24,21 @@ class AgentRouter(BaseChatAgent):
 
     async def detect_agent_and_function(self, query):
         prompt = f"""
-You are a router for technical support agents. Based on the following user query, choose the best agent and function to handle it.
+        You are an expert router that selects the **most appropriate** technical support agent based **strictly** on their specialization. Do not choose Fixie unless **no other agent is a clear fit**.
 
-Query: "{query}"
+        Query: "{query}"
 
-Available Agents and their roles:
-- **Sentinel:** A vigilant network security expert. Specializes in providing security tips, explaining vulnerabilities, and offering advice on protecting networks. **Has NO tools.**
-- **RouterX:** An expert on network routing and configurations. **Has NO tools.**
-- **Bytefix:** A diagnostic agent. {await self._describe_tools('bytefix')}
-- **Hypernet:** A performance agent. {await self._describe_tools('hypernet')}
-- **Professor Ping:** An educational agent. {await self._describe_tools('professor_ping')}
-- **Fixie:** A general troubleshooting agent. {await self._describe_tools('fixie')}
+        Agent Roles:
+        - **Sentinel:** Handles network **security** questions directly (no tools).
+        - **RouterX:** Handles **routing and configuration** issues directly (no tools).
+        - **Bytefix:** Diagnoses issues using tools. {await self._describe_tools('bytefix')}
+        - **Hypernet:** Performance optimization expert. {await self._describe_tools('hypernet')}
+        - **Professor Ping:** Explains technical concepts. {await self._describe_tools('professor_ping')}
+        - **Fixie:** General fallback. Only choose Fixie if **none of the above agents apply**.
 
-Respond in JSON format (no explanation, just the JSON): {{
-    "agent": "agent_name",
-    "function": "function_name",
-    "parameters": {{"param1": "value", ...}}
-}}
-"""
+        Respond in pure JSON (no explanation):
+        {{"agent": "agent_name", "function": "function_name", "parameters": {{...}}}}
+        """
         return self.chat_agent.generate_json_response(prompt)
 
     async def execute_function(self, agent_name, function_name, parameters):
@@ -86,7 +83,13 @@ Respond in JSON format (no explanation, just the JSON): {{
 
             chat_history.append({"role": "user", "content": query})
             chat_history.append({"role": "assistant", "content": user_response})
-            return {"raw": route["parameters"], "response": user_response, "chat_history": chat_history}
+            return {
+                    "raw": route["parameters"],
+                    "response": user_response,
+                    "agent": route["agent"],               
+                    "function": route["function"],          
+                    "chat_history": chat_history
+                }
 
         result = await self.execute_function(route["agent"], route["function"], route["parameters"])
         result = {route["function"]: result} if not isinstance(result, dict) else result
@@ -138,5 +141,6 @@ async def main():
     print(json.dumps(result["raw"], indent=2))
 
 if __name__ == "__main__":
-    import asyncio
+    import asyncio, os
+    os.environ["STREAMLIT_WATCHER_DISABLE"] = "true"
     asyncio.run(main())
