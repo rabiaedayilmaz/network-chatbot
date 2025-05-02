@@ -75,9 +75,14 @@ To run tests:
 pytest test/
 ```
 
-Run web interface for testing via Streamlit:
+Run web interface for testing via Streamlit (both local and api support):
 ```bash
 streamlit run app.py
+```
+
+Run web interface for testing via Streamlit (only api support also deployment):
+```bash
+streamlit run app_to_deploy.py
 ```
 
 To build container and deploy, one container is used for project app and other used for ollama models. 
