@@ -9,6 +9,8 @@ import os
 import html
 
 
+LLM_BACKENDS = ["gemini", "ollama"]
+
 AGENTS = {
     "fixie": {
         "name": "Fixie (Destek Botu)",
@@ -95,6 +97,9 @@ if "chat_history" not in st.session_state:
 
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid4())
+
+if "llm_backend" not in st.session_state:
+    st.session_state.llm_backend = "gemini"  # default
 
 if "processing_query" not in st.session_state:
     st.session_state.processing_query = None 
@@ -213,6 +218,7 @@ async def stream_response_to_placeholder(session_id, user_query, chat_history_fo
             user_query=user_query,
             chat_history=chat_history_for_llm,
             stream_to_terminal=False,
+            llm_backend=st.session_state.llm_backend
         )
 
         if returned_persona_key:
@@ -242,25 +248,43 @@ async def stream_response_to_placeholder(session_id, user_query, chat_history_fo
 
     # proceed with streaming
     try:
-        async for part in ai_generator:
-            chunk = part.get('message', {}).get('content')
-            if chunk: 
-                 full_response_content += chunk
+        if st.session_state.llm_backend == "gemini":
+            # gemini api does not support streaming
+            # so we need to wait for the full response
+            full_response_content = ai_generator  # it’s just a string!
 
-                 placeholder.markdown(f"""
-                     <div class="chat-container">
-                         <img src="{agent_avatar}" class="chat-avatar">
-                         <div>
-                              <div class="agent-name">{current_persona_display_name}</div>
-                              <div class="chat-bubble-bot">
-                                 {escape_html_with_breaks(full_response_content)}
-                                 <div class="timestamp-bot">{start_time}</div>
-                             </div>
-                         </div>
-                     </div>
-                 """, unsafe_allow_html=True)
-                 await asyncio.sleep(0.01) 
-        pass
+            placeholder.markdown(f"""
+                <div class="chat-container">
+                    <img src="{agent_avatar}" class="chat-avatar">
+                    <div>
+                        <div class="agent-name">{current_persona_display_name}</div>
+                        <div class="chat-bubble-bot">
+                            {escape_html_with_breaks(full_response_content)}
+                            <div class="timestamp-bot">{start_time}</div>
+                        </div>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+
+        else:
+            # streaming for other backends like Ollama
+            async for part in ai_generator:
+                chunk = part.get('message', {}).get('content')
+                if chunk:
+                    full_response_content += chunk
+                    placeholder.markdown(f"""
+                        <div class="chat-container">
+                            <img src="{agent_avatar}" class="chat-avatar">
+                            <div>
+                                <div class="agent-name">{current_persona_display_name}</div>
+                                <div class="chat-bubble-bot">
+                                    {escape_html_with_breaks(full_response_content)}
+                                    <div class="timestamp-bot">{start_time}</div>
+                                </div>
+                            </div>
+                        </div>
+                    """, unsafe_allow_html=True)
+                    await asyncio.sleep(0.01)
 
     except Exception as e:
         error_message_streaming = f"Akış sırasında bir hata oluştu: {e}"
@@ -286,6 +310,13 @@ async def stream_response_to_placeholder(session_id, user_query, chat_history_fo
 
 
 # sidebar - agent info
+st.sidebar.markdown("### 🔧 LLM Backend Seçimi")
+st.session_state.llm_backend = st.sidebar.selectbox(
+    "Hangi LLM kullanılacak?", 
+    LLM_BACKENDS, 
+    index=LLM_BACKENDS.index(st.session_state.llm_backend)
+)
+
 st.sidebar.title("Son Aktif Agent")
 
 current_agent_key = st.session_state.current_llm_agent_key
