@@ -34,7 +34,7 @@ class AgentRouter(BaseChatAgent):
         - **Bytefix:** Diagnoses issues using tools. {await self._describe_tools('bytefix')}
         - **Hypernet:** Performance optimization expert. {await self._describe_tools('hypernet')}
         - **Professor Ping:** Explains technical concepts. {await self._describe_tools('professor_ping')}
-        - **Fixie:** General fallback. Only choose Fixie if **none of the above agents apply**.
+        - **Fixie:** General fallback. Only choose Fixie if **none of the above agents apply** {await self._describe_tools('fixie')}
 
         Respond in pure JSON (no explanation):
         {{"agent": "agent_name", "function": "function_name", "parameters": {{...}}}}
