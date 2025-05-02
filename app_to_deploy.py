@@ -7,9 +7,18 @@ from llm.chat import handle_user_query
 import base64
 import os 
 import html
+from utils.log import logger
 
 
-LLM_BACKENDS = ["gemini", "ollama"]
+###
+### ollama is not supported for deplotyment yet
+### it runs only locally using app.py
+### system requrements are high for ollama 
+### but docker container is designed to handle all llm models including ollama
+###
+
+
+LLM_BACKENDS = ["gemini"]
 
 AGENTS = {
     "fixie": {
@@ -61,7 +70,6 @@ def image_to_base64(image_path):
 def escape_html_with_breaks(text):
     return html.escape(text).replace("\n", "<br>")
 
-
 st.set_page_config(page_title="Ağ Uzmanı Agent Takımı", page_icon="🌐", layout="centered")
 
 @st.cache_resource
@@ -91,7 +99,6 @@ for agent_key, agent_info in AGENTS.items():
 USER_AVATAR_B64 = image_to_base64("assets/user.png") 
 
 
-#st.set_page_config(page_title="Ağ Uzmanı Agent Takımı", page_icon="🌐", layout="centered")
 st.markdown("""
     <style>
         .reportview-container {
@@ -376,7 +383,7 @@ for chat in st.session_state.chat_history:
     role = chat.get("role", "user")
     content = chat.get("content", "")
     timestamp = chat.get("timestamp", "")
-    persona_key_in_history = chat.get("agent", st.session_state.current_llm_agent_key)
+    persona_key_in_history = chat.get("agent", st.session_state.current_llm_agent_key).lower()
 
     if role == "user":
         st.markdown(f"""
@@ -389,8 +396,9 @@ for chat in st.session_state.chat_history:
             </div>
         """, unsafe_allow_html=True)
     elif role == "assistant": # role == "assistant"
-         agent_info_for_display = AGENTS_WITH_B64_AVATARS.get(persona_key_in_history, AGENTS_WITH_B64_AVATARS["fixie"])
-
+         logger.info(f"Getting persona: {persona_key_in_history}")
+         agent_info_for_display = AGENTS_WITH_B64_AVATARS[persona_key_in_history]
+         logger.info(f"Agent info for display: {agent_info_for_display["name"]}")
          agent_avatar_to_display = agent_info_for_display.get("avatar_b64", "")
          agent_name_to_display = agent_info_for_display.get("name", "Bot")
          st.session_state.current_llm_agent_key = persona_key_in_history
@@ -417,7 +425,7 @@ if user_query and st.session_state.processing_query is None:
     st.session_state.chat_history.append({
         "role": "user",
         "content": cleaned_query,
-        "timestamp": timestamp,
+        "timestamp": timestamp
     })
 
     st.session_state.processing_query = {
