@@ -78,24 +78,14 @@ def init_google_sheet():
         
         # Initialize contact_info sheet
         try:
-            existing_data = conn.read(worksheet="contact_info")
-        except Exception:
-            # If worksheet doesn't exist, create it with headers
-            headers = pd.DataFrame(columns=[
-                "time", "name", "email", "phone", "language", "ip_address"
-            ])
-            conn.update(worksheet="contact_info", data=headers)
-        
-        # Initialize chat_interactions sheet
-        try:
             existing_data = conn.read(worksheet="Sayfa1")
         except Exception:
             # If worksheet doesn't exist, create it with headers
             headers = pd.DataFrame(columns=[
-                "time", "email", "user_prompt", "agent_response", "language", "ip_address"
+                "agent", "time", "ip_address", "user_prompt", "agent_response"
             ])
-            conn.update(worksheet="Sayfa1", data=headers)
-        
+            conn.update(worksheet="contact_info", data=headers)
+                
         return True
     except Exception as e:
         st.error(f"Failed to initialize Google Sheet: {e}")
