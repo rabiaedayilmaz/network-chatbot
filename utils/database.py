@@ -13,9 +13,7 @@ def update_dataframe(existing_df, new_data):
     if empty_indices:
         # Use the first empty index
         first_empty_index = empty_indices[0]
-        for col in existing_df.columns:
-            existing_df.at[first_empty_index, col] = new_data.iloc[0][col]
-
+        existing_df.loc[first_empty_index] = new_data.iloc[0]
     else:
         # If there are no empty indices, append the new data to the end
         existing_df = pd.concat([existing_df, new_data], ignore_index=True)
@@ -81,7 +79,7 @@ def init_google_sheet():
             headers = pd.DataFrame(columns=[
                 "agent", "time", "ip_address", "user_prompt", "agent_response"
             ])
-            conn.update(worksheet="contact_info", data=headers)
+            conn.update(worksheet="Sayfa1", data=headers)
                 
         return True
     except Exception as e:
