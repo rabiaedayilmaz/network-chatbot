@@ -8,6 +8,7 @@ import base64
 import os 
 import html
 from utils.log import logger
+import utils.database as db
 
 
 ###
@@ -69,6 +70,14 @@ def image_to_base64(image_path):
     
 def escape_html_with_breaks(text):
     return html.escape(text).replace("\n", "<br>")
+
+def save_to_db(user_query, agent, assistant_response):
+    # Store message in DB
+    db.record_to_database(
+        user_prompt=user_query, 
+        agent_response=assistant_response, 
+        agent=agent
+    )
 
 st.set_page_config(page_title="Ağ Uzmanı Agent Takımı", page_icon="🌐", layout="centered")
 
@@ -377,7 +386,6 @@ for key, agent in AGENTS.items():
             unsafe_allow_html=True
         )
 
-
 # existing messages in chat history
 for chat in st.session_state.chat_history:
     role = chat.get("role", "user")
@@ -416,6 +424,20 @@ for chat in st.session_state.chat_history:
                 </div>
             </div>
         """, unsafe_allow_html=True)
+         
+
+last_assistant_msg = next(
+    (msg for msg in reversed(st.session_state.chat_history) if msg["role"] == "assistant"), 
+    None
+)
+
+if last_assistant_msg:
+    agent_name_to_save = AGENTS_WITH_B64_AVATARS.get(
+        last_assistant_msg.get("agent", st.session_state.current_llm_agent_key).lower(), 
+        {}
+    ).get("name", "Bot")
+
+    save_to_db(user_query, agent_name_to_save, last_assistant_msg["content"])
 
 
 if user_query and st.session_state.processing_query is None:
@@ -428,6 +450,7 @@ if user_query and st.session_state.processing_query is None:
         "timestamp": timestamp,
         "agent": st.session_state.current_llm_agent_key
     })
+
 
     st.session_state.processing_query = {
         "query": cleaned_query,
