@@ -425,7 +425,8 @@ if user_query and st.session_state.processing_query is None:
     st.session_state.chat_history.append({
         "role": "user",
         "content": cleaned_query,
-        "timestamp": timestamp
+        "timestamp": timestamp,
+        "agent": st.session_state.current_llm_agent_key
     })
 
     st.session_state.processing_query = {
