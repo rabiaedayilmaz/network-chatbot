@@ -431,15 +431,6 @@ last_assistant_msg = next(
     None
 )
 
-if last_assistant_msg:
-    agent_name_to_save = AGENTS_WITH_B64_AVATARS.get(
-        last_assistant_msg.get("agent", st.session_state.current_llm_agent_key).lower(), 
-        {}
-    ).get("name", "Bot")
-
-    save_to_db(user_query, agent_name_to_save, last_assistant_msg["content"])
-
-
 if user_query and st.session_state.processing_query is None:
     timestamp = datetime.now().strftime("%H:%M")
     cleaned_query = clean_user_input(user_query)
@@ -488,6 +479,8 @@ if st.session_state.processing_query:
     )
 
     spinner_placeholder.empty()
+
+    save_to_db(user_query, agent_name_to_save, final_content)
 
     st.session_state.chat_history.append({
         "role": "assistant",
