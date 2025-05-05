@@ -480,7 +480,7 @@ if st.session_state.processing_query:
 
     spinner_placeholder.empty()
 
-    save_to_db(user_query, agent_key_for_this_turn, final_content)
+    save_to_db(query_to_process, agent_key_for_this_turn, final_content)
 
     st.session_state.chat_history.append({
         "role": "assistant",
