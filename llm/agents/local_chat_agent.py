@@ -44,7 +44,7 @@ class LocalAIChatAgent(BaseChatAgent):
         if persona == "fixie":
             user_query = await self._run_rag_if_needed(persona, user_query)
         elif persona == "hypernet":
-            speedtest_results = await run_speed_test()
+            speedtest_results = await run_speed_test(user_query)
             if speedtest_results:
                 user_query = f"{user_query}\n\n Speed Results: {speedtest_results} I will inform you about the speed test results."
                 logger.info("Speedtest results appended to user query.")

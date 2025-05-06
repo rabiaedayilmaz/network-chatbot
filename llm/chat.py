@@ -14,7 +14,7 @@ async def handle_user_query(
 ):
     """Handles a user query by selecting the correct AI agent and responding."""
 
-    if llm_backend == "local":
+    if llm_backend == "local" or llm_backend == "ollama":
         agent = LocalAIChatAgent(session_id=session_id, language_mode=language_mode)
         ai_response, persona = await agent.ask_agent(user_query, chat_history)
         if stream_to_terminal:

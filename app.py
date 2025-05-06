@@ -463,8 +463,8 @@ if st.session_state.processing_query:
         "timestamp": final_timestamp,
         "agent": completed_agent_key
     })
+    st.session_state.current_llm_agent_key = completed_agent_key
 
     st.session_state.processing_query = None
-    st.session_state.current_llm_agent_key = completed_agent_key
 
     st.rerun()
